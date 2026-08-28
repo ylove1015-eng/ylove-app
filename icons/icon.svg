@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Youlove 노란 해 아이콘">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFBEF"/>
+      <stop offset="1" stop-color="#FFE9A5"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD84C"/>
+      <stop offset="1" stop-color="#FFAE1A"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#D78A00" flood-opacity=".20"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g stroke="#FFB31F" stroke-width="18" stroke-linecap="round">
+    <path d="M256 74v43"/><path d="M256 351v43"/>
+    <path d="M74 256h43"/><path d="M395 256h43"/>
+    <path d="M127 127l31 31"/><path d="M354 354l31 31"/>
+    <path d="M385 127l-31 31"/><path d="M158 354l-31 31"/>
+  </g>
+  <circle cx="256" cy="256" r="112" fill="url(#sun)" filter="url(#shadow)"/>
+  <path d="M205 257c14 18 31 27 51 27s37-9 51-27" fill="none" stroke="#FFF8E2" stroke-width="15" stroke-linecap="round"/>
+  <circle cx="215" cy="226" r="10" fill="#9B6500" opacity=".72"/>
+  <circle cx="297" cy="226" r="10" fill="#9B6500" opacity=".72"/>
+</svg>

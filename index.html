@@ -4,7 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#fff8e6">
-  <title>유사랑 강사노트</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Youlove">
+  <meta name="description" content="유사랑님의 일정·강의기록·입금·자료를 관리하는 개인 앱">
+  <title>Youlove</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css">
   <style>
     :root{
@@ -97,8 +105,7 @@
     .text-btn{font-size:14px;font-weight:800;padding:5px 0}
     .card{box-shadow:none;border-color:var(--line);border-radius:20px}
     .schedule-card{min-height:72px;padding:14px 15px;grid-template-columns:58px 1fr;gap:1px 8px;margin-bottom:9px}
-    .schedule-time{font-size:15px;padding-top:1px}.schedule-title{font-size:16px;line-height:1.25;letter-spacing:-.35px}
-    .schedule-meta{font-size:12.5px;margin-top:5px;gap:4px}.schedule-meta svg{width:14px;height:14px}
+    .schedule-time{font-size:15px;padding-top:1px}.schedule-title{font-size:16px;line-height:1.25;letter-spacing:-.35px}    .schedule-meta{font-size:12.5px;margin-top:5px;gap:4px}.schedule-meta svg{width:14px;height:14px}
     .task-card{min-height:54px;padding:12px 14px;gap:10px;margin-bottom:8px}
     .task-title{font-size:15px;line-height:1.35;font-weight:800;padding:0}.task-square{color:#8f9398;font-size:16px;margin-right:4px}.task-card.done .task-square{color:#b5b7ba}
     .check{width:23px;height:23px;border-width:2px}.check.checked:after{font-size:14px}
@@ -197,8 +204,7 @@
     .fee-line{color:#6f737a}.fee-line strong{font-weight:830;letter-spacing:-.35px}
     .payment-card h3{font-size:16.5px;font-weight:800;letter-spacing:-.35px;line-height:1.42}
     .payment-card .place,.payment-card .date{line-height:1.45}
-    .mini-card{border-radius:18px}
-    .mini-card .m-label{font-size:12.5px;font-weight:720;line-height:1.4}
+    .mini-card{border-radius:18px}    .mini-card .m-label{font-size:12.5px;font-weight:720;line-height:1.4}
     .mini-card .m-value{font-size:19px;font-weight:830;letter-spacing:-.35px}
     .materials-intro{font-size:14.5px;line-height:1.65;letter-spacing:-.18px;color:#62666e}
     .material-title{font-size:17px;font-weight:800;letter-spacing:-.35px;line-height:1.4}
@@ -236,6 +242,19 @@
     .detail-record-needed{margin:0 0 13px;padding:13px 14px;font-size:15px}
     .schedule-sync-note{margin-top:-2px;padding:11px 13px;border-radius:13px;background:#fff1c9;color:#8f5908;display:flex;align-items:flex-start;gap:8px;font-size:13.5px;font-weight:700;line-height:1.5}
     .schedule-sync-note svg{width:18px;height:18px;flex:none;margin-top:1px}
+    .home-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .home-top .date-kicker{margin-right:auto}
+    .install-app-btn{display:none;height:38px;padding:0 13px;border:1px solid #f3c45c;border-radius:13px;background:#fff;color:#a85b00;align-items:center;gap:6px;font-size:13.5px;font-weight:800;white-space:nowrap}
+    .can-install .install-app-btn{display:inline-flex}
+    .install-app-btn svg{width:17px;height:17px}
+    .auth-page{min-height:calc(100dvh - 34px);padding:45px 25px 35px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,#fff9e9 0%,#fff3c7 100%)}
+    .auth-brand{text-align:center;margin-bottom:28px}.auth-logo{width:92px;height:92px;margin:0 auto 17px;display:block;filter:drop-shadow(0 12px 22px rgba(226,151,0,.18))}
+    .auth-brand h1{margin:0;font-size:34px;line-height:1.15;font-weight:900;letter-spacing:-1px;color:#27231c}.auth-brand p{margin:10px 0 0;color:#806f50;font-size:15px;line-height:1.55}
+    .auth-card{padding:21px 19px 19px;border-radius:23px}.auth-card .form{gap:13px}.auth-card .btn{margin-top:3px}
+    .auth-note{margin-top:16px;text-align:center;color:#8b806d;font-size:12.5px;line-height:1.55}
+    .loading-page{min-height:calc(100dvh - 34px);display:grid;place-items:center;background:var(--paper);text-align:center;color:#8a744a;font-weight:750}.loading-logo{width:82px;height:82px;margin:0 auto 14px;animation:sun-pulse 1.5s ease-in-out infinite alternate}
+    @keyframes sun-pulse{from{transform:scale(.96);opacity:.82}to{transform:scale(1.03);opacity:1}}
+    .logout-row{display:flex;justify-content:center;padding:14px 0 4px}.logout-btn{border:0;background:transparent;color:#8c8272;font-size:13px;font-weight:700;padding:10px}
     @media (max-width:370px){.lecture-tools{grid-template-columns:1fr}.sort-control{width:max-content;justify-self:end}.section-add-btn{padding:0 10px}.section-add-btn span{font-size:13.5px}}
   </style>
 </head>
@@ -254,9 +273,9 @@
     const initialData={events:[],tasks:[],lectures:[],materials:[]};
     const FIGMA_MOCK_IDS=new Set(['event_clinic','task_ppt','task_invoice','task_review','task_profile','lecture_business','lecture_senior','lecture_youth','material_resume','material_plan','material_photo','material_youtube','material_manner']);
     let pendingRemoteDeleteIds=[];
-    const state={tab:'home',lectureFilter:'all',lectureSort:'newest',selectedDate:dateKey(new Date()),calendar:new Date(new Date().getFullYear(),new Date().getMonth(),1),detailId:null,data:loadData(),objectUrls:[],dbReady:false};
+    const state={tab:'home',lectureFilter:'all',lectureSort:'newest',selectedDate:dateKey(new Date()),calendar:new Date(new Date().getFullYear(),new Date().getMonth(),1),detailId:null,data:loadData(),objectUrls:[],dbReady:false,userId:null};
     const app=document.getElementById('app'),modalRoot=document.getElementById('modal-root'),toastEl=document.getElementById('toast');
-    let toastTimer,sb=null,syncTimer=null;
+    let toastTimer,sb=null,syncTimer=null,installPrompt=null;
 
     function uid(prefix='id'){return prefix+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
     function pad(n){return String(n).padStart(2,'0')}
@@ -275,15 +294,22 @@
     function normalizeData(raw){const clean={...structuredClone(initialData),...(raw||{})};for(const key of ['events','tasks','lectures','materials'])clean[key]=(clean[key]||[]).filter(item=>!FIGMA_MOCK_IDS.has(item.id));const events=[];for(const e of clean.events){if(e.type!=='lecture'){events.push(e);continue}const match=clean.lectures.find(l=>l.id===e.id||sameLecture(l,e));if(match){if(!match.location)match.location=e.location||'';if(!match.notes)match.notes=e.memo||'';if(e.id!==match.id)pendingRemoteDeleteIds.push(e.id)}else clean.lectures.push(lectureFromSchedule(e,e.id));}clean.events=events;return clean}
     function loadData(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return structuredClone(initialData);const clean=normalizeData(JSON.parse(raw));localStorage.setItem(STORAGE_KEY,JSON.stringify(clean));return clean}catch{return structuredClone(initialData)}}
     function saveData(message='저장했어요'){localStorage.setItem(STORAGE_KEY,JSON.stringify(state.data));render();toast(message);clearTimeout(syncTimer);syncTimer=setTimeout(syncAll,120)}
-    function recordsFromState(){return ['events','tasks','lectures','materials'].flatMap(kind=>(state.data[kind]||[]).map(item=>({id:item.id,kind,data:item,updated_at:new Date().toISOString()})))}
+    function recordsFromState(){return ['events','tasks','lectures','materials'].flatMap(kind=>(state.data[kind]||[]).map(item=>({id:item.id,user_id:state.userId,kind,data:item,updated_at:new Date().toISOString()})))}
     async function initSupabase(){
-      if(!window.supabase?.createClient){toast('인터넷 연결을 확인해주세요');return}
-      sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+      if(!window.supabase?.createClient){renderLogin('인터넷 연결 후 다시 열어주세요.');return}
+      sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+      const {data:sessionData,error:sessionError}=await sb.auth.getSession();
+      if(sessionError){console.warn('로그인 상태 확인 실패:',sessionError);renderLogin('로그인 상태를 확인하지 못했어요.');return}
+      if(!sessionData.session){renderLogin();return}
+      await connectSupabase(sessionData.session.user);
+    }
+    async function connectSupabase(user){
+      state.userId=user.id;
       const {data,error}=await sb.from('youlove_records').select('id,kind,data,updated_at').order('updated_at',{ascending:false});
-      if(error){console.warn('Supabase 준비 필요:',error.message);toast('Supabase 테이블 연결이 필요해요');return}
+      if(error){console.warn('Supabase 준비 필요:',error);state.dbReady=false;render();toast('Supabase 설정 SQL을 먼저 실행해주세요');return}
       state.dbReady=true;
-      if(data?.length){const next=structuredClone(initialData);for(const row of data){if(next[row.kind]&&!FIGMA_MOCK_IDS.has(row.id))next[row.kind].push({...row.data,id:row.id})}state.data=normalizeData(next);localStorage.setItem(STORAGE_KEY,JSON.stringify(state.data));render();await flushPendingRemoteDeletes();await syncAll()}
-      else{await flushPendingRemoteDeletes();if(recordsFromState().length)await syncAll()}
+      if(data?.length){const next=structuredClone(initialData);for(const row of data){if(next[row.kind]&&!FIGMA_MOCK_IDS.has(row.id))next[row.kind].push({...row.data,id:row.id})}for(const kind of ['events','tasks','lectures','materials'])for(const item of state.data[kind]||[])if(!next[kind].some(x=>x.id===item.id))next[kind].push(item);state.data=normalizeData(next);localStorage.setItem(STORAGE_KEY,JSON.stringify(state.data));render();await flushPendingRemoteDeletes();await syncAll()}
+      else{render();await flushPendingRemoteDeletes();if(recordsFromState().length)await syncAll()}
     }
     async function syncAll(){if(!sb||!state.dbReady)return;const rows=recordsFromState();if(!rows.length)return;const {error}=await sb.from('youlove_records').upsert(rows,{onConflict:'id'});if(error){console.warn('Supabase 저장 실패:',error.message);toast('기기에는 저장됐지만 서버 저장을 확인해주세요')}}
     async function deleteRemote(id){if(!sb||!state.dbReady)return;const {error}=await sb.from('youlove_records').delete().eq('id',id);if(error)console.warn('Supabase 삭제 실패:',error.message)}
@@ -297,14 +323,15 @@
       ${navBtn('home','house','홈')}${navBtn('schedule','calendar-days','스케줄')}${navBtn('lectures','book-open','강의기록')}${navBtn('payments','credit-card','입금확인')}${navBtn('materials','folder','자료전달')}
     </nav>`}
     function navBtn(tab,ico,label){return `<button class="nav-btn ${state.tab===tab?'active':''}" data-action="nav" data-tab="${tab}">${icon(ico)}<span>${label}</span></button>`}
-    function header(title,back=false){return `<header class="topbar"><div class="back-title">${back?`<button class="icon-btn" data-action="back" aria-label="뒤로">${icon('chevron-left')}</button>`:''}<h1>${esc(title)}</h1></div><button class="icon-btn" data-action="notice" aria-label="알림">${icon('bell')}</button></header>`}
-    function empty(ico,title,text,button=''){return `<div class="card empty">${icon(ico)}<strong>${esc(title)}</strong><span>${esc(text)}</span>${button}</div>`}
+    function header(title,back=false){return `<header class="topbar"><div class="back-title">${back?`<button class="icon-btn" data-action="back" aria-label="뒤로">${icon('chevron-left')}</button>`:''}<h1>${esc(title)}</h1></div><button class="icon-btn" data-action="notice" aria-label="알림">${icon('bell')}</button></header>`}    function empty(ico,title,text,button=''){return `<div class="card empty">${icon(ico)}<strong>${esc(title)}</strong><span>${esc(text)}</span>${button}</div>`}
 
     function statusbar(){return `<div class="statusbar" aria-hidden="true"><span>9:41</span><span class="status-icons">${icon('chart-no-axes-column-increasing')}${icon('wifi')}${icon('battery-full')}</span></div>`}
+    function renderLoading(){app.innerHTML=statusbar()+`<section class="loading-page"><div><img class="loading-logo" src="./icons/icon.svg" alt=""><div>Youlove를 준비하고 있어요</div></div></section>`}
+    function renderLogin(message=''){cleanupUrls();app.innerHTML=statusbar()+`<section class="auth-page"><div class="auth-brand"><img class="auth-logo" src="./icons/icon.svg" alt="Youlove"><h1>Youlove</h1><p>유사랑님의 일정과 강의 기록을<br>안전하게 관리해요.</p></div><div class="card auth-card"><form class="form" data-form="login">${field('이메일','email','','email',true,'autocomplete="username"')}${field('비밀번호','password','','password',true,'autocomplete="current-password"')}<button class="btn primary full" type="submit">로그인</button></form></div>${message?`<div class="auth-note">${esc(message)}</div>`:'<div class="auth-note">등록된 유사랑님 계정으로만 로그인할 수 있어요.</div>'}<button class="install-app-btn" data-action="install-app">${icon('download')}<span>휴대전화에 앱 설치</span></button></section>`;icons()}
     function render(){cleanupUrls();let html='';if(state.detailId)html=renderLectureDetail();else if(state.tab==='home')html=renderHome();else if(state.tab==='schedule')html=renderSchedule();else if(state.tab==='lectures')html=renderLectures();else if(state.tab==='payments')html=renderPayments();else html=renderMaterials();app.innerHTML=statusbar()+html+nav();icons();hydrateBlobs()}
 
     function renderHome(){const t=today();const events=allSchedule().filter(x=>x.date===t).sort(sortTime);const tasks=state.data.tasks.filter(x=>x.date===t);const lectureCount=events.filter(x=>x.type==='lecture').length,personalCount=events.filter(x=>x.type==='personal').length,doneTaskCount=tasks.filter(x=>x.done).length;return `<section class="page">
-      <div class="date-kicker">${longKoDate(t)}</div><h1 class="greeting">유사랑님,<br>좋은 아침이에요 ☀️</h1>
+      <div class="home-top"><div class="date-kicker">${longKoDate(t)}</div><button class="install-app-btn" data-action="install-app">${icon('download')}<span>앱 설치</span></button></div><h1 class="greeting">유사랑님,<br>좋은 아침이에요 ☀️</h1>
       <div class="summary-grid home-summary">
         ${summary('오늘 일정',events.length,`강의 ${lectureCount} · 개인 ${personalCount}`,'calendar-days')}
         ${summary('오늘 할 일',tasks.length,`완료 ${doneTaskCount} · 남은 일 ${tasks.length-doneTaskCount}`,'square-check-big')}
@@ -343,7 +370,7 @@
 
     function renderMaterials(){const list=state.data.materials;return `<section class="page">${header('자료전달')}<p class="materials-intro">강의를 요청한 기관 담당자에게 이력서와 강의안을 쉽고 빠르게 전송해보세요.</p>
       ${list.length?list.map(materialCard).join(''):empty('folder-open','등록된 자료가 없어요','이력서·포트폴리오·링크를 추가해보세요',`<button class="btn primary" style="margin-top:18px" data-action="material-add">자료 추가</button>`)}
-      </section>`}
+      <div class="logout-row"><button class="logout-btn" data-action="auth-logout">로그아웃</button></div></section>`}
     function materialIcon(x){if(x.kind==='link')return 'youtube';if((x.displayType||'').includes('이미지'))return 'image';if((x.displayType||'').includes('슬라이드'))return 'presentation';return 'file-text'}
     function materialCard(x){return `<div class="card material-card"><button style="border:0;background:transparent;width:100%;text-align:left;padding:0" data-action="material-edit" data-id="${x.id}"><div class="material-head"><div class="material-icon">${icon(materialIcon(x))}</div><div><div class="material-title">${esc(x.title)}</div><div class="material-type">${esc(x.displayType||(x.kind==='link'?'웹 링크':x.fileType||'파일'))}</div></div></div></button><div class="material-actions"><button class="btn" data-action="material-preview" data-id="${x.id}">미리보기</button><button class="btn primary" data-action="material-share" data-id="${x.id}">보내기</button></div></div>`}
 
@@ -370,6 +397,7 @@
     function openMaterialForm(id){const x=state.data.materials.find(v=>v.id===id)||{id:'',kind:'link',title:'',url:'',fileName:'',fileType:''};modal(id?'자료 수정':'자료 추가',`<form class="form" data-form="material"><input type="hidden" name="id" value="${esc(x.id)}"><div class="segmented"><input id="m-link" type="radio" name="kind" value="link" ${x.kind==='link'?'checked':''}><label for="m-link">웹 링크</label><input id="m-file" type="radio" name="kind" value="file" ${x.kind==='file'?'checked':''}><label for="m-file">파일</label></div>${field('자료명','title',x.title,'text',true)}${field('웹 주소','url',x.url,'url')}<div class="upload-box"><div class="field"><label for="materialFile">파일 선택</label><input id="materialFile" name="materialFile" type="file"><div class="helper">파일 자료일 때 선택하세요. 기존 파일은 새 파일을 선택할 때만 교체됩니다.</div></div></div><div class="form-actions">${id?'<button type="button" class="btn danger" data-action="material-delete" data-id="'+id+'">삭제</button>':'<button type="button" class="btn" data-action="modal-close">취소</button>'}<button class="btn primary" type="submit">저장하기</button></div></form>`)}
 
     async function handleSubmit(e){const form=e.target.closest('form[data-form]');if(!form)return;e.preventDefault();const fd=new FormData(form),type=form.dataset.form;let saveMessage='저장했어요';
+      if(type==='login'){if(!sb){toast('인터넷 연결을 확인해주세요');return}const button=form.querySelector('button[type="submit"]');button.disabled=true;button.textContent='확인 중…';const {data,error}=await sb.auth.signInWithPassword({email:fd.get('email').trim(),password:fd.get('password')});if(error){console.warn('로그인 실패:',error);button.disabled=false;button.textContent='로그인';toast('이메일 또는 비밀번호를 확인해주세요');return}renderLoading();await connectSupabase(data.user);toast('로그인했어요');return}
       if(type==='event'){const eventId=fd.get('id'),seed={title:fd.get('title').trim(),date:fd.get('date'),start:fd.get('start'),end:fd.get('end'),location:fd.get('location').trim(),memo:fd.get('memo').trim()};if(fd.get('type')==='lecture'){const match=state.data.lectures.find(l=>sameLecture(l,seed)),id=match?.id||eventId||uid('lecture'),old=match||state.data.lectures.find(l=>l.id===id);const x=old?{...old,title:seed.title,date:seed.date,start:seed.start,end:seed.end,location:seed.location||old.location,notes:old.notes||seed.memo,updatedAt:new Date().toISOString()} : lectureFromSchedule(seed,id);upsert(state.data.lectures,x);if(eventId){state.data.events=state.data.events.filter(v=>v.id!==eventId);if(eventId!==id)await deleteRemote(eventId)}saveMessage='스케줄과 강의기록에 함께 저장했어요'}else{const id=eventId||uid('event'),x={id,type:'personal',...seed};upsert(state.data.events,x)}}
       if(type==='task'){const id=fd.get('id')||uid('task'),old=state.data.tasks.find(x=>x.id===id),x={id,title:fd.get('title').trim(),date:fd.get('date'),done:old?.done||false};upsert(state.data.tasks,x)}
       if(type==='lecture'){const requestedId=fd.get('id'),seed={title:fd.get('title').trim(),date:fd.get('date'),start:fd.get('start')},match=requestedId?null:state.data.lectures.find(l=>sameLecture(l,seed)),id=requestedId||match?.id||uid('lecture'),old=state.data.lectures.find(x=>x.id===id)||{};const attachments=[...(old.attachments||[])];for(const file of fd.getAll('attachments'))if(file&&file.size){const blobId=uid('blob');await putBlob(blobId,file);attachments.push({id:uid('att'),blobId,name:file.name,type:file.type||'application/octet-stream',size:file.size})}const now=new Date().toISOString(),x={...old,id,title:seed.title,institution:fd.get('institution').trim(),location:fd.get('location').trim(),date:seed.date,start:seed.start,end:fd.get('end'),audience:fd.get('audience').trim(),people:Number(fd.get('people')||0),fee:Number(fd.get('fee')||0),paymentDue:fd.get('paymentDue'),status:fd.get('status'),notes:fd.get('notes').trim(),attachments,paid:old.paid||false,recordSource:old.recordSource||'lecture',needsRecordUpdate:false,createdAt:old.createdAt||now,updatedAt:now};upsert(state.data.lectures,x);state.detailId=id;saveMessage='강의기록과 스케줄에 함께 저장했어요'}
@@ -378,9 +406,11 @@
       closeModal();saveData(saveMessage)}
     function upsert(arr,obj){const i=arr.findIndex(x=>x.id===obj.id);if(i<0)arr.unshift(obj);else arr[i]=obj}
 
-    app.addEventListener('click',handleClick);app.addEventListener('change',handleChange);modalRoot.addEventListener('click',handleClick);modalRoot.addEventListener('submit',handleSubmit);
+    app.addEventListener('click',handleClick);app.addEventListener('change',handleChange);app.addEventListener('submit',handleSubmit);modalRoot.addEventListener('click',handleClick);modalRoot.addEventListener('submit',handleSubmit);
     function handleChange(e){const el=e.target.closest('[data-action="lecture-sort"]');if(!el)return;state.lectureSort=el.value;render()}
     async function handleClick(e){const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action,id=b.dataset.id;
+      if(a==='install-app'){if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;document.documentElement.classList.remove('can-install');state.userId?render():renderLogin()}else toast('브라우저 메뉴에서 홈 화면에 추가해주세요');return}
+      if(a==='auth-logout'){if(!confirm('로그아웃할까요?'))return;await sb?.auth.signOut();state.userId=null;state.dbReady=false;renderLogin();toast('로그아웃했어요');return}
       if(a==='nav'){state.tab=b.dataset.tab;state.detailId=null;render();return}
       if(a==='back'){state.detailId=null;render();return}
       if(a==='notice'){toast('새로운 알림이 없어요');return}
@@ -397,22 +427,25 @@
       if(a==='blob-open'){await openBlob(id);return}
       if(a==='material-preview'){await previewMaterial(id);return}
       if(a==='material-share'){await shareMaterial(id);return}
-    }
-    async function removeRecord(action,id){if(!confirm('정말 삭제할까요?'))return;if(action==='event-delete')state.data.events=state.data.events.filter(x=>x.id!==id);if(action==='task-delete')state.data.tasks=state.data.tasks.filter(x=>x.id!==id);if(action==='lecture-delete'){const x=state.data.lectures.find(v=>v.id===id);for(const a of x?.attachments||[])await deleteBlob(a.blobId);state.data.lectures=state.data.lectures.filter(x=>x.id!==id);state.detailId=null}if(action==='material-delete'){const x=state.data.materials.find(v=>v.id===id);if(x?.blobId)await deleteBlob(x.blobId);state.data.materials=state.data.materials.filter(x=>x.id!==id)}await deleteRemote(id);closeModal();saveData();toast('삭제했어요')}
+    }    async function removeRecord(action,id){if(!confirm('정말 삭제할까요?'))return;if(action==='event-delete')state.data.events=state.data.events.filter(x=>x.id!==id);if(action==='task-delete')state.data.tasks=state.data.tasks.filter(x=>x.id!==id);if(action==='lecture-delete'){const x=state.data.lectures.find(v=>v.id===id);for(const a of x?.attachments||[])await deleteBlob(a.blobId);state.data.lectures=state.data.lectures.filter(x=>x.id!==id);state.detailId=null}if(action==='material-delete'){const x=state.data.materials.find(v=>v.id===id);if(x?.blobId)await deleteBlob(x.blobId);state.data.materials=state.data.materials.filter(x=>x.id!==id)}await deleteRemote(id);closeModal();saveData();toast('삭제했어요')}
 
     function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open('youlove_lecture_files',1);req.onupgradeneeded=()=>req.result.createObjectStore('files');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+    function storagePath(id){return state.userId?`${state.userId}/${id}`:id}
     async function putBlob(id,blob){
-      if(sb&&state.dbReady){const {error}=await sb.storage.from('youlove-files').upload(id,blob,{contentType:blob.type||'application/octet-stream',upsert:true});if(!error)return;console.warn('Supabase 파일 저장 실패:',error.message)}
+      if(sb&&state.dbReady){const {error}=await sb.storage.from('youlove-files').upload(storagePath(id),blob,{contentType:blob.type||'application/octet-stream',upsert:true});if(!error)return;console.warn('Supabase 파일 저장 실패:',error)}
       const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').put(blob,id);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>reject(tx.error)})
     }
-    async function getBlob(id){if(!id)return null;if(sb&&state.dbReady){const {data,error}=await sb.storage.from('youlove-files').download(id);if(!error&&data)return data}const db=await openDB();return new Promise((resolve,reject)=>{const req=db.transaction('files').objectStore('files').get(id);req.onsuccess=()=>{db.close();resolve(req.result||null)};req.onerror=()=>reject(req.error)})}
-    async function deleteBlob(id){if(!id)return;if(sb&&state.dbReady)await sb.storage.from('youlove-files').remove([id]);const db=await openDB();return new Promise(resolve=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').delete(id);tx.oncomplete=()=>{db.close();resolve()}})}
+    async function getBlob(id){if(!id)return null;if(sb&&state.dbReady){const {data,error}=await sb.storage.from('youlove-files').download(storagePath(id));if(!error&&data)return data}const db=await openDB();return new Promise((resolve,reject)=>{const req=db.transaction('files').objectStore('files').get(id);req.onsuccess=()=>{db.close();resolve(req.result||null)};req.onerror=()=>reject(req.error)})}
+    async function deleteBlob(id){if(!id)return;if(sb&&state.dbReady)await sb.storage.from('youlove-files').remove([storagePath(id)]);const db=await openDB();return new Promise(resolve=>{const tx=db.transaction('files','readwrite');tx.objectStore('files').delete(id);tx.oncomplete=()=>{db.close();resolve()}})}
     async function openBlob(id){const blob=await getBlob(id);if(!blob){toast('파일을 찾을 수 없어요');return}const url=URL.createObjectURL(blob);state.objectUrls.push(url);window.open(url,'_blank','noopener')}
     async function hydrateBlobs(){for(const el of document.querySelectorAll('[data-blob-id]')){const blob=await getBlob(el.dataset.blobId);if(!blob)continue;const url=URL.createObjectURL(blob);state.objectUrls.push(url);el.innerHTML=el.dataset.type.startsWith('video/')?`<video src="${url}" muted preload="metadata"></video><span style="position:absolute;color:white">${icon('play')}</span>`:`<img src="${url}" alt="강의 사진">`;el.style.position='relative'}icons()}
     async function previewMaterial(id){const x=state.data.materials.find(v=>v.id===id);if(!x)return;if(x.kind==='link'){if(!x.url){toast('웹 주소가 없어요');return}window.open(x.url,'_blank','noopener')}else await openBlob(x.blobId)}
     async function shareMaterial(id){const x=state.data.materials.find(v=>v.id===id);if(!x)return;try{if(x.kind==='file'&&x.blobId){const blob=await getBlob(x.blobId),file=new File([blob],x.fileName||x.title,{type:x.fileType||blob.type});if(navigator.canShare?.({files:[file]})){await navigator.share({title:x.title,files:[file]});return}}const text=x.url?`${x.title}\n${x.url}`:x.title;if(navigator.share){await navigator.share({title:x.title,text,url:x.url||undefined})}else{await navigator.clipboard.writeText(text);toast('전달할 내용을 복사했어요')}}catch(err){if(err.name!=='AbortError')toast('공유하지 못했어요')}}
 
-    render();
+    window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;document.documentElement.classList.add('can-install')});
+    window.addEventListener('appinstalled',()=>{installPrompt=null;document.documentElement.classList.remove('can-install');toast('Youlove 설치가 완료됐어요')});
+    if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('앱 설치 준비 실패:',err)));
+    renderLoading();
     initSupabase();
   })();
   </script>
