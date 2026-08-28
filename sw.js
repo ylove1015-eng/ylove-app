@@ -1,4 +1,4 @@
-const CACHE_NAME='youlove-pwa-v2';
+const CACHE_NAME='youlove-pwa-v3';
 const CORE=[
   './',
   './index.html',
@@ -23,6 +23,18 @@ self.addEventListener('fetch',event=>{
   if(request.method!=='GET')return;
   const url=new URL(request.url);
   if(url.hostname.endsWith('.supabase.co'))return;
+  if(request.mode==='navigate'){
+    event.respondWith(
+      fetch(request).then(response=>{
+        if(response&&response.status===200){
+          const copy=response.clone();
+          caches.open(CACHE_NAME).then(cache=>cache.put('./index.html',copy));
+        }
+        return response;
+      }).catch(()=>caches.match('./index.html'))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(request).then(cached=>cached||fetch(request).then(response=>{
       if(response&&(response.status===200||response.type==='opaque')){
