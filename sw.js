@@ -1,4 +1,4 @@
-const CACHE_NAME='youlove-pwa-v3';
+const CACHE_NAME='youlove-pwa-v4';
 const CORE=[
   './',
   './index.html',

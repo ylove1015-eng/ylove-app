@@ -254,6 +254,7 @@
     .loading-page{min-height:calc(100dvh - 34px);display:grid;place-items:center;background:var(--paper);text-align:center;color:#8a744a;font-weight:750}.loading-logo{width:82px;height:82px;margin:0 auto 14px;animation:sun-pulse 1.5s ease-in-out infinite alternate}
     .pull-refresh{position:fixed;z-index:90;left:50%;top:calc(7px + env(safe-area-inset-top));transform:translate(-50%,-64px);min-height:38px;padding:0 14px;border:1px solid rgba(224,216,194,.9);border-radius:999px;background:rgba(255,255,255,.97);box-shadow:0 8px 22px rgba(71,57,25,.13);display:flex;align-items:center;gap:7px;color:#6f6655;font-size:13px;font-weight:760;opacity:0;pointer-events:none;transition:transform .16s ease,opacity .16s ease}
     .pull-refresh.visible,.pull-refresh.refreshing{opacity:1}.pull-refresh.refreshing{transform:translate(-50%,0)!important}.pull-refresh-icon{font-size:19px;line-height:1;color:var(--orange-deep)}.pull-refresh.refreshing .pull-refresh-icon{animation:refresh-spin .75s linear infinite}
+    .account-connect-intro{margin:0;color:#625c51;font-size:15px;line-height:1.65}.account-connect-note{padding:14px 15px;border:1px solid #f1dfb5;border-radius:15px;background:#fff4d9;color:#765f31;font-size:13px;line-height:1.55}.account-connect-actions{display:grid;gap:10px}.account-connect-actions .btn{height:auto;min-height:55px;padding:12px 16px}.account-connect-actions small{display:block;margin-top:4px;font-size:12px;font-weight:650;line-height:1.35;opacity:.78}.account-mail{font-weight:850;color:var(--orange-deep);word-break:break-all}
     @keyframes refresh-spin{to{transform:rotate(360deg)}}
     @keyframes sun-pulse{from{transform:scale(.96);opacity:.82}to{transform:scale(1.03);opacity:1}}
     .logout-row{display:flex;justify-content:center;padding:14px 0 4px}.logout-btn{border:0;background:transparent;color:#8c8272;font-size:13px;font-weight:700;padding:10px}
@@ -276,7 +277,7 @@
     const initialData={events:[],tasks:[],lectures:[],materials:[]};
     const FIGMA_MOCK_IDS=new Set(['event_clinic','task_ppt','task_invoice','task_review','task_profile','lecture_business','lecture_senior','lecture_youth','material_resume','material_plan','material_photo','material_youtube','material_manner']);
     let pendingRemoteDeleteIds=[];
-    const state={tab:'home',lectureFilter:'all',lectureSort:'newest',lectureQuery:'',materialSort:'custom',materialQuery:'',selectedDate:dateKey(new Date()),calendar:new Date(new Date().getFullYear(),new Date().getMonth(),1),detailId:null,data:loadData(),objectUrls:[],dbReady:false,userId:null};
+    const state={tab:'home',lectureFilter:'all',lectureSort:'newest',lectureQuery:'',materialSort:'custom',materialQuery:'',selectedDate:dateKey(new Date()),calendar:new Date(new Date().getFullYear(),new Date().getMonth(),1),detailId:null,data:loadData(),objectUrls:[],dbReady:false,userId:null,userEmail:'',accountReady:false};
     const app=document.getElementById('app'),modalRoot=document.getElementById('modal-root'),toastEl=document.getElementById('toast'),pullEl=document.getElementById('pull-refresh'),pullText=pullEl.querySelector('[data-pull-text]');
     let toastTimer,sb=null,syncTimer=null,installPrompt=null,pullStart=0,pullDistance=0,pulling=false,refreshing=false,lastAutoRefresh=0;
 
@@ -294,6 +295,9 @@
     function paymentDate(v){if(!v)return '미정';const d=new Date(v+'T00:00:00');return `${d.getMonth()+1}월 ${d.getDate()}일`}
     function detailDate(v){if(!v)return '';const d=new Date(v+'T00:00:00');return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())} (${['일','월','화','수','목','금','토'][d.getDay()]})`}
     function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+    function isAnonymousUser(user){return !!(user?.is_anonymous||user?.app_metadata?.provider==='anonymous'||user?.identities?.length===0)}
+    function hasAnyData(){return ['events','tasks','lectures','materials'].some(kind=>(state.data[kind]||[]).length>0)}
+    function authRedirectUrl(){const url=new URL(location.href);url.search='';url.hash='';return url.toString()}
     function sameLecture(a,b){return String(a.title||'').trim()===String(b.title||'').trim()&&a.date===b.date&&String(a.start||'')===String(b.start||'')}
     function lectureFromSchedule(e,id=uid('lecture')){const now=new Date().toISOString();return {id,title:e.title||'',institution:'',location:e.location||'',managerName:e.managerName||'',managerPhone:e.managerPhone||'',date:e.date||today(),start:e.start||'',end:e.end||'',audience:'',people:0,fee:Number(e.fee||0),paymentDue:'',status:'planned',notes:e.memo||'',attachments:[],paid:false,recordSource:'schedule',needsRecordUpdate:true,createdAt:e.createdAt||now,updatedAt:now}}
     function normalizeData(raw){const clean={...structuredClone(initialData),...(raw||{})};for(const key of ['events','tasks','lectures','materials'])clean[key]=(clean[key]||[]).filter(item=>!FIGMA_MOCK_IDS.has(item.id));clean.materials.forEach((item,index)=>{const order=Number(item.order);item.order=Number.isFinite(order)&&order>0?order:index+1});const events=[];for(const e of clean.events){if(e.type!=='lecture'){events.push(e);continue}const match=clean.lectures.find(l=>l.id===e.id||sameLecture(l,e));if(match){if(!match.location)match.location=e.location||'';if(!match.managerName)match.managerName=e.managerName||'';if(!match.managerPhone)match.managerPhone=e.managerPhone||'';if(!Number(match.fee)&&Number(e.fee))match.fee=Number(e.fee);if(!match.notes)match.notes=e.memo||'';if(e.id!==match.id)pendingRemoteDeleteIds.push(e.id)}else clean.lectures.push(lectureFromSchedule(e,e.id));}clean.events=events;return clean}
@@ -303,6 +307,7 @@
     async function initSupabase(){
       if(!window.supabase?.createClient){state.dbReady=false;render();toast('인터넷 연결 전에는 기기에만 저장돼요');return}
       sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+      sb.auth.onAuthStateChange((event,session)=>{if(event==='INITIAL_SESSION'||!session?.user||isAnonymousUser(session.user))return;setTimeout(async()=>{if(!state.accountReady||state.userId!==session.user.id){closeModal();await connectSupabase(session.user);toast('유사랑 계정 연결이 완료됐어요')}},0)});
       const {data:sessionData,error:sessionError}=await sb.auth.getSession();
       if(sessionError){console.warn('자동 연결 상태 확인 실패:',sessionError);state.dbReady=false;render();toast('기기에는 저장되지만 서버 연결을 확인해주세요');return}
       if(sessionData.session){await connectSupabase(sessionData.session.user);return}
@@ -312,11 +317,35 @@
     }
     async function connectSupabase(user){
       state.userId=user.id;
+      state.userEmail=user.email||'';
+      state.accountReady=!isAnonymousUser(user);
       const {data,error}=await sb.from('youlove_records').select('id,kind,data,updated_at').order('updated_at',{ascending:false});
       if(error){console.warn('Supabase 준비 필요:',error);state.dbReady=false;render();toast('Supabase 설정 SQL을 먼저 실행해주세요');return}
       state.dbReady=true;
       if(data?.length){const next=structuredClone(initialData);for(const row of data){if(next[row.kind]&&!FIGMA_MOCK_IDS.has(row.id))next[row.kind].push({...row.data,id:row.id})}for(const kind of ['events','tasks','lectures','materials'])for(const item of state.data[kind]||[])if(!next[kind].some(x=>x.id===item.id))next[kind].push(item);state.data=normalizeData(next);localStorage.setItem(STORAGE_KEY,JSON.stringify(state.data));render();await flushPendingRemoteDeletes();await syncAll()}
       else{render();await flushPendingRemoteDeletes();if(recordsFromState().length)await syncAll()}
+      if(!state.accountReady)setTimeout(openAccountConnect,0);
+    }
+    function openAccountConnect(){
+      const hasData=hasAnyData();
+      modal('처음 한 번만 연결',`<div class="form"><p class="account-connect-intro">이메일로 한 번만 연결하면 이후에는 로그인 화면 없이 바로 열리고, 다른 휴대폰에서도 같은 자료를 볼 수 있어요.</p><div class="account-connect-note">${hasData?'이 휴대폰에 기존 자료가 있어요. 먼저 아래의 <b>현재 자료 연결하기</b>를 눌러주세요.':'기존 자료가 있는 휴대폰에서 먼저 계정 연결을 완료한 뒤, 이 휴대폰에서는 <b>기존 자료 불러오기</b>를 눌러주세요.'}</div>${field('연결할 이메일','connectEmail',state.userEmail,'email',true,'autocomplete="email" placeholder="유사랑님 이메일"')}<div class="account-connect-actions">${hasData?`<button class="btn primary" data-action="account-claim">현재 자료를 이메일에 연결<small>기존 데이터의 소유자를 그대로 유지해요</small></button><button class="btn" data-action="account-signin">기존 자료 불러오기<small>이미 다른 기기에서 연결한 경우</small></button>`:`<button class="btn primary" data-action="account-signin">기존 자료 불러오기<small>연결 메일을 받아 같은 자료를 열어요</small></button><button class="btn" data-action="account-claim">이 기기의 자료를 처음 연결<small>아직 어느 기기에서도 연결하지 않은 경우</small></button>`}</div><div class="helper">연결이 끝나면 이 화면은 다시 나오지 않습니다.</div></div>`)
+    }
+    async function sendAccountEmail(mode){
+      const input=document.getElementById('connectEmail'),email=String(input?.value||'').trim();
+      if(!/^\S+@\S+\.\S+$/.test(email)){toast('이메일 주소를 확인해주세요');input?.focus();return}
+      const button=modalRoot.querySelector(`[data-action="account-${mode}"]`);if(button)button.disabled=true;
+      try{
+        let error;
+        if(mode==='claim')({error}=await sb.auth.updateUser({email},{emailRedirectTo:authRedirectUrl()}));
+        else({error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:authRedirectUrl(),shouldCreateUser:false}}));
+        if(error)throw error;
+        modal('이메일을 확인해주세요',`<div class="form"><p class="account-connect-intro"><span class="account-mail">${esc(email)}</span>로 연결 메일을 보냈어요.</p><div class="account-connect-note">메일의 연결 버튼을 누른 뒤 Youlove로 돌아오세요. 이 과정은 처음 한 번만 필요합니다.</div><button class="btn primary full" data-action="account-check">연결 확인하기</button><button class="btn full" data-action="modal-close">나중에 확인</button></div>`)
+      }catch(error){console.warn('계정 연결 메일 실패:',error);toast(mode==='claim'?'Supabase의 수동 연결 설정을 확인해주세요':'먼저 기존 자료가 있는 기기에서 연결해주세요');if(button)button.disabled=false}
+    }
+    async function checkAccountConnection(){
+      const {data,error}=await sb.auth.refreshSession();
+      if(error||!data.session||isAnonymousUser(data.session.user)){toast('메일의 연결 버튼을 먼저 눌러주세요');return}
+      closeModal();await connectSupabase(data.session.user);toast('계정 연결이 완료됐어요')
     }
     async function refreshAppData(showMessage=true){
       if(refreshing)return;
@@ -439,6 +468,9 @@
       if(a==='nav'){state.tab=b.dataset.tab;state.detailId=null;render();return}
       if(a==='back'){state.detailId=null;render();return}
       if(a==='notice'){toast('새로운 알림이 없어요');return}
+      if(a==='account-claim'){await sendAccountEmail('claim');return}
+      if(a==='account-signin'){await sendAccountEmail('signin');return}
+      if(a==='account-check'){await checkAccountConnection();return}
       if(a==='modal-close'||(a==='modal-bg'&&e.target===b)){closeModal();return}
       if(a==='event-add'){openEventForm();return}if(a==='task-add'){openTaskForm();return}if(a==='lecture-add'){openLectureForm();return}if(a==='material-add'){openMaterialForm();return}
       if(a==='task-edit'){openTaskForm(id);return}if(a==='lecture-edit'){openLectureForm(id);return}if(a==='material-edit'){openMaterialForm(id);return}if(a==='payment-edit'){openPaymentForm(id);return}
